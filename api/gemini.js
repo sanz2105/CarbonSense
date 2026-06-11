@@ -47,7 +47,7 @@ User's day: ${sanitized}`
             }]
           }],
           generationConfig: {
-            maxOutputTokens: 400,
+            maxOutputTokens: 1000,
             temperature: 0.7
           }
         })
