@@ -110,34 +110,44 @@ export default function InsightsPanel() {
 
   const getInsights = async () => {
     const userInput = inputText.trim();
-    if (!userInput) return;
+    if (!userInput) {
+      setError('Please describe your day first.');
+      return;
+    }
 
     setLoading(true);
     setError(null);
     setResponse('');
 
     try {
-      // Call our own serverless proxy — API key is never exposed to the browser
-      const res = await fetch('/api/gemini', {
+      const response = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userInput }),
+        body: JSON.stringify({ userInput })
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || `Request failed (HTTP ${res.status})`);
+      if (!response.ok) {
+        throw new Error(data.error || 'Request failed');
       }
 
-      const text = data.result;
-      if (text) {
-        setResponse(text);
-      } else {
-        throw new Error('Unexpected response format from server.');
+      if (!data.result) {
+        throw new Error('No response received');
       }
+
+      setResponse(data.result);
+
     } catch (err) {
-      setError('Unable to get insights. Try again.');
+      const errorMsg = err.message || 'Unable to get insights. Try again.';
+      
+      if (errorMsg.includes('API key not configured')) {
+        setError('⚙️ API key missing. Add GEMINI_API_KEY to Vercel environment variables.');
+      } else if (errorMsg.includes('fetch') || errorMsg.includes('Failed to reach')) {
+        setError('Network error — make sure you have internet connection.');
+      } else {
+        setError(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
