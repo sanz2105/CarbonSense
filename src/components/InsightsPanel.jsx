@@ -220,7 +220,7 @@ export default function InsightsPanel() {
         )}
 
         {response && !loading && (
-          <div className="border border-[#1D9E75]/20 bg-gradient-to-b from-[#1D9E75]/5 to-white rounded-xl p-4 animate-fadeIn">
+          <div className="border border-[#1D9E75]/20 bg-gradient-to-b from-[#1D9E75]/5 to-white rounded-xl p-4 animate-fadeIn max-h-[400px] overflow-y-auto">
             {/* Rendered sections */}
             <div className="space-y-0.5">
               {renderMarkdown(response)}
