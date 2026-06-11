@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/gemini.js": {
+      "memory": 512,
+      "maxDuration": 15
+    }
+  },
+  "rewrites": [
+    { "source": "/api/gemini", "destination": "/api/gemini" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
