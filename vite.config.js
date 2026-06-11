@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: './',
   server: {
-    port: 5173,
+    port: parseInt(process.env.PORT) || 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
@@ -25,5 +25,10 @@ export default defineConfig({
         }
       }
     }
+  },
+  test: {
+    globals: true,
+    environment: 'node',
+    css: false
   }
 })
