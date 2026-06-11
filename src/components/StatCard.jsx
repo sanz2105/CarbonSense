@@ -1,5 +1,5 @@
-import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export default function StatCard({ title, value, unit, icon: Icon, trend, trendValue }) {
   const isTrendDown = trend === 'down';
@@ -9,11 +9,9 @@ export default function StatCard({ title, value, unit, icon: Icon, trend, trendV
   let TrendIcon = Minus;
 
   if (isTrendDown) {
-    // Emissions going down is good -> Green!
     trendColor = 'text-green-600 bg-green-50 border border-green-100';
     TrendIcon = ArrowDownRight;
   } else if (isTrendUp) {
-    // Emissions going up is bad -> Red!
     trendColor = 'text-red-600 bg-red-50 border border-red-100';
     TrendIcon = ArrowUpRight;
   }
@@ -46,3 +44,20 @@ export default function StatCard({ title, value, unit, icon: Icon, trend, trendV
     </div>
   );
 }
+
+StatCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string, 
+    PropTypes.number
+  ]).isRequired,
+  unit: PropTypes.string.isRequired,
+  icon: PropTypes.node,
+  trend: PropTypes.oneOf(['up', 'down', 'neutral']),
+  trendValue: PropTypes.string
+};
+
+StatCard.defaultProps = {
+  trend: 'neutral',
+  trendValue: ''
+};

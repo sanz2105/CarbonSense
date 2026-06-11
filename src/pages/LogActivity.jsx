@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PenTool, Car, Flame, ShoppingBag, Utensils, MoreHorizontal, CheckCircle2, AlertTriangle, Calendar } from 'lucide-react';
+import { PenTool, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { emissionFactors } from '../data/mockData';
 import { saveActivity } from '../utils/storage';
 
 export default function LogActivity() {
+  useEffect(() => {
+    document.title = 'Log Activity — CarbonSense';
+  }, []);
+
   const navigate = useNavigate();
 
   // Base fields
@@ -30,12 +34,10 @@ export default function LogActivity() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Live Emissions Calculation
-  const [estimatedEmissions, setEstimatedEmissions] = useState(0);
-
-  useEffect(() => {
+  // Live emissions calculation is derived from the current form state.
+  const estimatedEmissions = (() => {
     let emissions = 0;
-    
+
     if (category === 'Transport') {
       const distance = parseFloat(transportDistance) || 0;
       const factor = emissionFactors.transport[transportVehicle] || 0;
@@ -54,9 +56,8 @@ export default function LogActivity() {
       emissions = parseFloat(otherManualCo2) || 0;
     }
 
-    // Round to 3 decimal places for precision
-    setEstimatedEmissions(Math.round(emissions * 1000) / 1000);
-  }, [category, transportDistance, transportVehicle, foodMealType, energyUsage, shoppingType, shoppingAmount, otherManualCo2]);
+    return Math.round(emissions * 1000) / 1000;
+  })();
 
   // Clean up toast timeout on unmount
   useEffect(() => {
@@ -157,16 +158,18 @@ export default function LogActivity() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn relative">
       {/* Toast Alert */}
-      {showToast && (
-        <div className="fixed top-4 right-4 z-50 bg-gray-900 border border-gray-800 text-white rounded-xl px-4 py-3.5 shadow-xl flex items-center gap-3 animate-slideIn transition-all duration-300">
-          <div className="p-1 bg-[#1D9E75] rounded-full text-white">
-            <CheckCircle2 size={18} />
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {showToast && (
+          <div className="fixed top-4 right-4 z-50 bg-gray-900 border border-gray-800 text-white rounded-xl px-4 py-3.5 shadow-xl flex items-center gap-3 animate-slideIn transition-all duration-300">
+            <div className="p-1 bg-[#1D9E75] rounded-full text-white">
+              <CheckCircle2 size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">{toastMessage}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-semibold">{toastMessage}</p>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Header section */}
       <div className="flex items-center gap-3 mb-8">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, Flame, CloudRain, ShieldCheck, TrendingUp, TrendingDown, History, Car, Zap, ShoppingBag, Utensils, MoreHorizontal, ArrowRight, PenLine, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import StatCard from '../components/StatCard';
@@ -42,24 +42,21 @@ function buildWeeklyChart(activities) {
 }
 
 export default function Dashboard() {
-  const [activities, setActivities] = useState([]);
-  const [hasRealData, setHasRealData] = useState(false);
+  useEffect(() => {
+    document.title = 'Dashboard — CarbonSense';
+  }, []);
+
+  const storedActivities = getActivities();
+  const [activities] = useState(storedActivities);
   const [showBanner, setShowBanner] = useState(
     !sessionStorage.getItem('banner_dismissed')
   );
+  const hasRealData = activities.length > 0;
 
   const dismissBanner = () => {
     sessionStorage.setItem('banner_dismissed', 'true');
     setShowBanner(false);
   };
-
-  useEffect(() => {
-    const stored = getActivities();
-    if (stored.length > 0) {
-      setActivities(stored);
-      setHasRealData(true);
-    }
-  }, []);
 
   const todayDate = new Date().toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',

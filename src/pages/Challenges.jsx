@@ -60,6 +60,10 @@ const INITIAL_CHALLENGES = [
 ];
 
 export default function Challenges() {
+  useEffect(() => {
+    document.title = 'Eco Challenges — CarbonSense';
+  }, []);
+
   // Streak state - persisted in localStorage via storage utils
   const [streak, setStreak] = useState(() => {
     const saved = getStreak();
@@ -237,6 +241,7 @@ export default function Challenges() {
                     <button
                       onClick={() => handleAddProgress(challenge.id)}
                       type="button"
+                      aria-label={`Increase progress for ${challenge.title}`}
                       className="flex-1 text-center bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
                     >
                       +10%
@@ -244,6 +249,7 @@ export default function Challenges() {
                     <button
                       onClick={() => handleComplete(challenge.id)}
                       type="button"
+                      aria-label={`Mark ${challenge.title} as complete`}
                       className="flex-1 text-center bg-[#1D9E75] hover:bg-[#0F6E56] text-white py-2 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
                     >
                       Complete

@@ -1,8 +1,12 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Sparkles, Car, Utensils, Lightbulb, HelpCircle } from 'lucide-react';
 import InsightsPanel from '../components/InsightsPanel';
 
 export default function Insights() {
+  useEffect(() => {
+    document.title = 'AI Insights — CarbonSense';
+  }, []);
+
   const facts = [
     {
       id: 1,

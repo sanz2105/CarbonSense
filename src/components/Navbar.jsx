@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, X, Leaf, LayoutDashboard, PenTool, Sparkles, Trophy } from 'lucide-react';
 
@@ -57,6 +57,7 @@ export default function Navbar() {
               className="inline-flex items-center justify-center p-2 rounded-xl text-gray-400 hover:text-[#1D9E75] hover:bg-gray-50 focus:outline-none transition-colors"
               aria-controls="mobile-menu"
               aria-expanded={isOpen}
+              aria-label="Toggle navigation menu"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? <X size={24} /> : <Menu size={24} />}

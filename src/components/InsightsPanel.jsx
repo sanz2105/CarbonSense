@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 
 // ── Lightweight markdown → JSX renderer ──────────────────────────────────────
@@ -231,3 +231,13 @@ export default function InsightsPanel() {
     </div>
   );
 }
+
+import PropTypes from 'prop-types';
+
+InsightsPanel.propTypes = {
+  compact: PropTypes.bool
+};
+
+InsightsPanel.defaultProps = {
+  compact: false
+};

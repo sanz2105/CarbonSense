@@ -6,13 +6,21 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: './',
   server: {
-    port: parseInt(process.env.PORT) || 5173,
+    port: 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: (path) => path
+        changeOrigin: true
       }
+    }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    css: false,
+    deps: {
+      inline: ['@testing-library/jest-dom']
     }
   },
   build: {
@@ -25,10 +33,5 @@ export default defineConfig({
         }
       }
     }
-  },
-  test: {
-    globals: true,
-    environment: 'node',
-    css: false
   }
 })
