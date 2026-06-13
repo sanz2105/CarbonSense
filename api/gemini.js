@@ -104,17 +104,27 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are a carbon footprint coach. The user will describe their daily activities. Give them:
-1) A carbon footprint estimate for their day in kg CO₂
-2) Their top 2 emission sources
-3) Two specific actionable tips to reduce their footprint
-Be concise, friendly and encouraging. Format with 3 short sections using emoji headers.
+              text: `You are a carbon footprint coach. The user described 
+their day. Respond in EXACTLY this format with NO extra text:
+
+🌍 Your Daily Footprint
+[One sentence with total CO₂ estimate in kg]
+
+🔥 Top Emission Sources
+1. [Source]: [kg CO₂]
+2. [Source]: [kg CO₂]
+
+💡 Two Tips to Reduce Your Impact
+1. [Specific actionable tip]
+2. [Specific actionable tip]
+
+Keep total response under 120 words. Be encouraging.
 
 User's day: ${sanitized}`
             }]
           }],
           generationConfig: {
-            maxOutputTokens: 400,
+            maxOutputTokens: 1024,
             temperature: 0.7
           }
         })

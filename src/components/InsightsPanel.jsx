@@ -223,12 +223,21 @@ export default function InsightsPanel({ compact = false }) {
         )}
 
         {response && !loading && (
-          <div className="border border-[#1D9E75]/20 bg-gradient-to-b from-[#1D9E75]/5 to-white rounded-xl p-4 animate-fadeIn max-h-[400px] overflow-y-auto">
-            {/* Rendered sections */}
-            <div className="space-y-0.5">
-              {renderMarkdown(response)}
+          <>
+            <div 
+              className="border border-[#1D9E75]/20 bg-gradient-to-b from-[#1D9E75]/5 to-white rounded-xl p-4 animate-fadeIn"
+              style={{ overflowY: 'auto', maxHeight: '320px', minHeight: '80px' }}
+            >
+              <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px' }}>
+                {response}
+              </div>
             </div>
-          </div>
+            {response.length > 400 && (
+              <p style={{ fontSize: '11px', color: '#6B7280', marginTop: '8px' }}>
+                Scroll to see full response ↓
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>
