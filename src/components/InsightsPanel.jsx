@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 // ── Lightweight markdown → JSX renderer ──────────────────────────────────────
 // Handles: emoji section headers (lines starting with emoji + text),
@@ -102,7 +103,9 @@ function inlineFormat(text) {
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function InsightsPanel() {
+// FIX 8: default param replaces deprecated defaultProps
+// FIX 9: compact PropType removed (never used in component body)
+export default function InsightsPanel({ compact = false }) {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState('');
@@ -232,12 +235,4 @@ export default function InsightsPanel() {
   );
 }
 
-import PropTypes from 'prop-types';
-
-InsightsPanel.propTypes = {
-  compact: PropTypes.bool
-};
-
-InsightsPanel.defaultProps = {
-  compact: false
-};
+InsightsPanel.propTypes = {};

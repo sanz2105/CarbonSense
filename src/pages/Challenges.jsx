@@ -67,7 +67,7 @@ export default function Challenges() {
   // Streak state - persisted in localStorage via storage utils
   const [streak, setStreak] = useState(() => {
     const saved = getStreak();
-    return saved !== 0 ? saved : 3;
+    return saved !== null && saved !== undefined ? saved : 0;
   });
 
   // Challenges list state - persisted in localStorage via storage utils

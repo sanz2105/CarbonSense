@@ -42,16 +42,19 @@ describe('emission calculations', () => {
     expect(calculateFood('Beef meal')).toBeGreaterThan(calculateFood('Dairy-heavy'))
   })
 
-  it('emission factors exist and are positive numbers', () => {
+  it('emission factors exist and non-transport are positive', () => {
+    const { Bike, ...nonBike } = emissionFactors.transport || {}
+    expect(Bike).toBe(0)
+    
     const allFactors = [
-      ...Object.values(emissionFactors.transport || {}),
+      ...Object.values(nonBike),
       ...Object.values(emissionFactors.food || {}),
       ...Object.values(emissionFactors.energy || {}),
       ...Object.values(emissionFactors.shopping || {})
     ]
     allFactors.forEach(val => {
       expect(typeof val).toBe('number')
-      expect(val).toBeGreaterThanOrEqual(0)
+      expect(val).toBeGreaterThan(0)
     })
   })
 })

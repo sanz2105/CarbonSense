@@ -1,7 +1,7 @@
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import PropTypes from 'prop-types';
 
-export default function StatCard({ title, value, unit, icon: Icon, trend, trendValue }) {
+export default function StatCard({ title, value, unit, icon: Icon, trend = 'neutral', trendValue = '' }) {
   const isTrendDown = trend === 'down';
   const isTrendUp = trend === 'up';
   
@@ -57,7 +57,4 @@ StatCard.propTypes = {
   trendValue: PropTypes.string
 };
 
-StatCard.defaultProps = {
-  trend: 'neutral',
-  trendValue: ''
-};
+

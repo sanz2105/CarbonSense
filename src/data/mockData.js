@@ -69,7 +69,7 @@ export const emissionFactors = {
     Electronics: 0.003,
     Clothing: 0.002,
     Groceries: 0.001,
-    Other: 0.0
+    Other: 0.0015
   }
 };
 

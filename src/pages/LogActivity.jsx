@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PenTool, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { emissionFactors } from '../data/mockData';
@@ -33,6 +33,7 @@ export default function LogActivity() {
   const [errors, setErrors] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const toastTimeoutRef = useRef(null);
 
   // Live emissions calculation is derived from the current form state.
   const estimatedEmissions = (() => {
@@ -62,8 +63,8 @@ export default function LogActivity() {
   // Clean up toast timeout on unmount
   useEffect(() => {
     return () => {
-      if (window.toastTimeout) {
-        clearTimeout(window.toastTimeout);
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
       }
     };
   }, []);
@@ -133,15 +134,16 @@ export default function LogActivity() {
 
     // Persist to localStorage
     saveActivity(activity);
+    window.dispatchEvent(new Event('carbonsense-activity-saved'));
 
     // Trigger Success Toast
     setToastMessage('Activity logged! Redirecting to Dashboard…');
     setShowToast(true);
 
-    if (window.toastTimeout) {
-      clearTimeout(window.toastTimeout);
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
     }
-    window.toastTimeout = setTimeout(() => {
+    toastTimeoutRef.current = setTimeout(() => {
       setShowToast(false);
       navigate('/');
     }, 1500);

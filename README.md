@@ -13,7 +13,7 @@
 
 1.  **Dashboard**: Offers a high-level summary of emissions metrics (daily, weekly, monthly, and vs. global averages) alongside an interactive, visual weekly emissions chart (Recharts) and a real-time list of logged activities.
 2.  **Log Activity**: A dynamic calculator form where users can log daily habits (Transport, Food, Energy, Shopping, and Other). Emissions are calculated in real-time as users type, using standard emission coefficients.
-3.  **AI Insights**: A direct chat gateway ("🤖 AI Carbon Coach") that queries Google Gemini 3.5 Flash to analyze a user's day, estimate daily carbon impact, identify emission culprits, and recommend actionable reduction tips.
+3.  **AI Insights**: A direct chat gateway ("🤖 AI Carbon Coach") that queries Google Gemini API (gemini-3.5-flash) to analyze a user's day, estimate daily carbon impact, identify emission culprits, and recommend actionable reduction tips.
 4.  **Eco Challenges**: A gamified track where users participate in 6 custom carbon-saving challenges (Easy, Medium, Hard). Completing challenges triggers streak increments, updates progress bars, and computes overall carbon-reduction stats and tree equivalencies.
 
 ---
@@ -27,7 +27,7 @@
 | **React Router DOM** | SPA page routing (`/`, `/log`, `/insights`, `/challenges`) |
 | **Recharts** | Data visualization for weekly emissions history |
 | **Lucide React** | High-quality responsive SVG icons |
-| **Google Gemini 3.5 Flash** | AI Carbon Coach: free, browser-compatible REST API |
+| **Google Gemini API (gemini-3.5-flash)** | AI Carbon Coach: free, browser-compatible REST API |
 
 ---
 
@@ -35,7 +35,7 @@
 
 | Service | Purpose | Cost |
 | :--- | :--- | :--- |
-| **Google Gemini 3.5 Flash** | AI insights (free tier) | Free |
+| **Google Gemini API (gemini-3.5-flash)** | AI insights (free tier) | Free |
 | **localStorage** | Data persistence | Free (browser) |
 | **Recharts** | Data visualization | Free (open source) |
 | **Lucide React** | Icons | Free (open source) |

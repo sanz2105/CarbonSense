@@ -7,6 +7,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const LogActivity = lazy(() => import('./pages/LogActivity'));
 const Insights = lazy(() => import('./pages/Insights'));
 const Challenges = lazy(() => import('./pages/Challenges'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function AppLayout() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function AppLayout() {
             <Route path="/log" element={<LogActivity />} />
             <Route path="/insights" element={<Insights />} />
             <Route path="/challenges" element={<Challenges />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>

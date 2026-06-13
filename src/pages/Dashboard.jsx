@@ -46,8 +46,42 @@ export default function Dashboard() {
     document.title = 'Dashboard — CarbonSense';
   }, []);
 
+  useEffect(() => {
+    const handleActivitySaved = () => {
+      const stored = getActivities()
+      const recent = stored.slice(0, 5)
+      setActivities(recent.length > 0 ? recent : mockActivities.slice(0, 5))
+      
+      const last7Days = []
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      const today = new Date()
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today)
+        d.setDate(today.getDate() - i)
+        const dateStr = d.toISOString().substring(0, 10)
+        const dayLabel = days[d.getDay()]
+        const total = stored
+          .filter((a) => a.date === dateStr)
+          .reduce((sum, a) => sum + (a.emissions || 0), 0)
+        last7Days.push({ day: dayLabel, emissions: Math.round(total * 100) / 100 })
+      }
+      setChartData(recent.length > 0 ? last7Days : mockWeekly)
+    }
+
+    window.addEventListener(
+      'carbonsense-activity-saved', 
+      handleActivitySaved
+    )
+    return () => {
+      window.removeEventListener(
+        'carbonsense-activity-saved', 
+        handleActivitySaved
+      )
+    }
+  }, []);
+
   const storedActivities = getActivities();
-  const [activities] = useState(storedActivities);
+  const [activities, setActivities] = useState(storedActivities);
   const [showBanner, setShowBanner] = useState(
     !sessionStorage.getItem('banner_dismissed')
   );
@@ -87,7 +121,7 @@ export default function Dashboard() {
   const recentToShow = hasRealData ? activities.slice(0, 5) : mockActivities.slice(0, 5);
 
   // ── Chart data ───────────────────────────────────────
-  const chartData = hasRealData ? buildWeeklyChart(activities) : mockWeekly;
+  const [chartData, setChartData] = useState(hasRealData ? buildWeeklyChart(activities) : mockWeekly);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">

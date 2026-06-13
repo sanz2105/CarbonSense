@@ -52,7 +52,7 @@ export default function FootprintChart({ data }) {
                 tickLine={false}
               />
               <YAxis 
-                domain={[0, 10]} 
+                domain={[0, (dataMax) => Math.ceil(Math.max(dataMax, 10) * 1.2)]} 
                 tick={{ fill: '#9ca3af', fontSize: 12, fontWeight: 500 }}
                 axisLine={false}
                 tickLine={false}
