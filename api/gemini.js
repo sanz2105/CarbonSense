@@ -21,7 +21,6 @@ function loadEnvIfNeeded() {
   }
 }
 
-// ── Rate limiter ───────────────────────────────────────────────────────────────
 const rateLimit = new Map()
 const RATE_LIMIT_WINDOW = 60 * 1000
 const RATE_LIMIT_MAX = 5
@@ -38,74 +37,62 @@ function isRateLimited(ip) {
   return false
 }
 
-// ── Main handler ───────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-  if (req.method === 'OPTIONS') return res.status(200).end()
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
-
-  const ip =
-    req.headers['x-forwarded-for'] ||
-    req.headers['x-real-ip'] ||
-    'unknown'
-
-  if (isRateLimited(ip)) {
-    return res.status(429).json({
-      error: 'Too many requests. Please wait a minute before trying again.'
-    })
-  }
-
-  // Parse body — handles both Vercel (string) and local Vite middleware (object)
-  let body = req.body
-  if (typeof body === 'string') {
-    try {
-      body = JSON.parse(body)
-    } catch {
-      return res.status(400).json({ error: 'Invalid JSON body' })
-    }
-  }
-
-  if (!body || typeof body !== 'object') {
-    return res.status(400).json({ error: 'Request body is missing' })
-  }
-
-  const { userInput } = body
-
-  if (!userInput || userInput.trim().length === 0) {
-    return res.status(400).json({ error: 'userInput is required' })
-  }
-
-  const sanitized = userInput.replace(/<[^>]*>/g, '').trim().slice(0, 500)
-
-  // Load .env if running locally
-  loadEnvIfNeeded()
-
-  const apiKey = process.env.GEMINI_API_KEY
-
-  if (!apiKey) {
-    return res.status(500).json({
-      error: 'API key not configured. Add GEMINI_API_KEY to your .env file or Vercel env vars.'
-    })
-  }
-
   try {
-    // gemini-3.5-flash is the correct model for this API key
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `You are a carbon footprint coach. The user described 
-their day. Respond in EXACTLY this format with NO extra text:
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+    if (req.method === 'OPTIONS') return res.status(200).end()
+
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' })
+    }
+
+    const ip = req.headers['x-forwarded-for'] ||
+               req.headers['x-real-ip'] ||
+               'unknown'
+
+    if (isRateLimited(ip)) {
+      return res.status(429).json({
+        error: 'Too many requests. Please wait a minute.'
+      })
+    }
+
+    let body = req.body
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body)
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON body' })
+      }
+    }
+
+    if (!body || typeof body !== 'object') {
+      return res.status(400).json({ error: 'Request body missing' })
+    }
+
+    const { userInput } = body
+
+    if (!userInput || userInput.trim().length === 0) {
+      return res.status(400).json({ error: 'userInput is required' })
+    }
+
+    const sanitized = userInput
+      .replace(/<[^>]*>/g, '')
+      .trim()
+      .slice(0, 500)
+
+    loadEnvIfNeeded()
+    
+    const apiKey = process.env.GEMINI_API_KEY
+    if (!apiKey) {
+      return res.status(500).json({
+        error: 'API key not configured. Add GEMINI_API_KEY to Vercel env vars.'
+      })
+    }
+
+    const prompt = `You are a carbon footprint coach. Respond in EXACTLY this format:
 
 🌍 Your Daily Footprint
 [One sentence with total CO₂ estimate in kg]
@@ -118,51 +105,78 @@ their day. Respond in EXACTLY this format with NO extra text:
 1. [Specific actionable tip]
 2. [Specific actionable tip]
 
-Keep total response under 120 words. Be encouraging.
-
+Keep total response under 150 words. Be encouraging.
 User's day: ${sanitized}`
-            }]
-          }],
-          generationConfig: {
-            maxOutputTokens: 1024,
-            temperature: 0.7
-          }
-        })
-      }
-    )
 
-    const responseText = await geminiRes.text()
+    const models = [
+      'gemini-3.5-flash',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash'
+    ]
 
-    if (!geminiRes.ok) {
-      let errMsg = `Gemini API error ${geminiRes.status}`
+    let lastError = null
+
+    for (const model of models) {
       try {
-        const errData = JSON.parse(responseText)
-        errMsg = errData?.error?.message || errMsg
-      } catch {}
-      return res.status(geminiRes.status).json({ error: errMsg })
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                maxOutputTokens: 1024,
+                temperature: 0.7
+              }
+            })
+          }
+        )
+
+        const responseText = await geminiRes.text()
+
+        if (!geminiRes.ok) {
+          let errMsg = `Model ${model} returned ${geminiRes.status}`
+          try {
+            const errData = JSON.parse(responseText)
+            errMsg = errData?.error?.message || errMsg
+          } catch {}
+          lastError = errMsg
+          continue
+        }
+
+        let data
+        try {
+          data = JSON.parse(responseText)
+        } catch {
+          lastError = 'Invalid JSON from Gemini'
+          continue
+        }
+
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
+        if (!text) {
+          lastError = 'Empty response from model'
+          continue
+        }
+
+        return res.status(200).json({ 
+          result: text,
+          model: model
+        })
+
+      } catch (modelErr) {
+        lastError = modelErr.message
+        continue
+      }
     }
 
-    let data
-    try {
-      data = JSON.parse(responseText)
-    } catch {
-      return res.status(500).json({
-        error: 'Invalid response from Gemini API'
-      })
-    }
+    return res.status(503).json({
+      error: lastError || 'All Gemini models unavailable. Try again later.'
+    })
 
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
-
-    if (!text) {
-      return res.status(500).json({ error: 'Empty response from Gemini' })
-    }
-
-    return res.status(200).json({ result: text })
-
-  } catch (err) {
-    console.error('[gemini handler] fetch error:', err)
+  } catch (outerErr) {
     return res.status(500).json({
-      error: 'Failed to reach Gemini API. Check your connection.'
+      error: 'Internal server error. Please try again.'
     })
   }
 }

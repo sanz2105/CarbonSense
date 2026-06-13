@@ -129,11 +129,20 @@ export default function InsightsPanel({ compact = false }) {
         body: JSON.stringify({ userInput })
       });
 
-      const data = await response.json();
+      if (response.status === 503) {
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(
+          errData.error || 
+          'AI service temporarily unavailable. Try again shortly.'
+        )
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Request failed');
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.error || 'Request failed')
       }
+
+      const data = await response.json();
 
       if (!data.result) {
         throw new Error('No response received');
