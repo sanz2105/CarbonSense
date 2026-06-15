@@ -32,7 +32,7 @@ export default function Insights() {
     <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn space-y-8">
       {/* Title */}
       <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-[#1D9E75]/10 rounded-xl text-[#1D9E75]">
+        <div className="p-2.5 bg-[#166E52]/10 rounded-xl text-[#166E52]">
           <Sparkles size={28} />
         </div>
         <div>
@@ -49,7 +49,7 @@ export default function Insights() {
       {/* Did You Know? section */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <HelpCircle size={20} className="text-[#1D9E75]" />
+          <HelpCircle size={20} className="text-[#166E52]" />
           Did You Know?
         </h2>
         
@@ -59,7 +59,7 @@ export default function Insights() {
             return (
               <div
                 key={fact.id}
-                className="bg-white border-l-4 border-[#1D9E75] rounded-r-xl border border-gray-100 shadow-sm p-5 flex flex-col items-start space-y-3.5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                className="bg-white border-l-4 border-[#166E52] rounded-r-xl border border-gray-100 shadow-sm p-5 flex flex-col items-start space-y-3.5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
               >
                 <div className={`p-2.5 rounded-xl ${fact.color}`}>
                   <Icon size={20} />

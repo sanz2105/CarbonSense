@@ -1,7 +1,8 @@
+import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import PropTypes from 'prop-types';
 
-export default function StatCard({ title, value, unit, icon: Icon, trend = 'neutral', trendValue = '' }) {
+function StatCard({ title, value, unit, icon: Icon, trend = 'neutral', trendValue = '' }) {
   const isTrendDown = trend === 'down';
   const isTrendUp = trend === 'up';
   
@@ -21,7 +22,7 @@ export default function StatCard({ title, value, unit, icon: Icon, trend = 'neut
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm font-medium text-gray-500">{title}</span>
         {Icon && (
-          <div className="p-2.5 bg-[#1D9E75]/10 rounded-xl text-[#1D9E75]">
+          <div className="p-2.5 bg-[#166E52]/10 rounded-xl text-[#166E52]">
             <Icon size={20} strokeWidth={2.2} />
           </div>
         )}
@@ -57,4 +58,4 @@ StatCard.propTypes = {
   trendValue: PropTypes.string
 };
 
-
+export default React.memo(StatCard);

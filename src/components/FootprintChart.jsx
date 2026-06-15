@@ -1,22 +1,23 @@
+import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { weeklyEmissions as defaultData } from '../data/mockData';
 import PropTypes from 'prop-types';
+import { COLORS } from '../constants';
 
-// Custom Tooltip component to display "{day}: {value} kg CO₂"
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const { day, emissions } = payload[0].payload;
     return (
       <div className="bg-white px-3 py-2 border border-gray-100 rounded-xl shadow-md text-xs font-semibold text-gray-800">
         <span className="text-gray-900">{day}: </span>
-        <span className="text-[#1D9E75] font-bold">{emissions} kg CO₂</span>
+        <span style={{ color: COLORS.PRIMARY_GREEN }} className="font-bold">{emissions} kg CO₂</span>
       </div>
     );
   }
   return null;
 };
 
-export default function FootprintChart({ data }) {
+function FootprintChart({ data }) {
   const chartData = data || defaultData;
   return (
     <div className="bg-white rounded-[12px] border border-gray-100 p-6 shadow-sm flex flex-col justify-between min-h-[360px]">
@@ -27,11 +28,11 @@ export default function FootprintChart({ data }) {
         </div>
         <div className="flex items-center gap-4 text-xs font-medium text-gray-500">
           <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded bg-[#1D9E75]"></span>
+            <span className="w-3 h-3 rounded" style={{ backgroundColor: COLORS.PRIMARY_GREEN }}></span>
             Emissions (kg)
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 border-t-2 border-dashed border-[#EF9F27]"></span>
+            <span className="w-3 h-0.5 border-t-2 border-dashed" style={{ borderColor: COLORS.WARNING_ORANGE }}></span>
             Global Daily Avg (5.5)
           </span>
         </div>
@@ -65,13 +66,13 @@ export default function FootprintChart({ data }) {
               <Legend verticalAlign="bottom" height={1} content={() => null} />
               <ReferenceLine 
                 y={5.5} 
-                stroke="#EF9F27" 
+                stroke={COLORS.WARNING_ORANGE} 
                 strokeDasharray="4 4" 
                 strokeWidth={1.5}
                 label={{
                   value: 'Global Avg',
                   position: 'insideBottomRight',
-                  fill: '#EF9F27',
+                  fill: COLORS.WARNING_ORANGE,
                   fontSize: 10,
                   fontWeight: 600,
                   offset: 6
@@ -79,10 +80,10 @@ export default function FootprintChart({ data }) {
               />
               <Bar 
                 dataKey="emissions" 
-                fill="#1D9E75" 
+                fill={COLORS.PRIMARY_GREEN} 
                 radius={[6, 6, 0, 0]}
                 maxBarSize={44}
-                activeBar={{ fill: '#0F6E56' }}
+                activeBar={{ fill: COLORS.PRIMARY_HOVER }}
               />
             </BarChart>
           </ResponsiveContainer>
@@ -100,7 +101,9 @@ FootprintChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       day: PropTypes.string.isRequired,
-      emissions: PropTypes.number.isRequired
+      emissions: PropTypes.number.isRequired,
     })
-  )
+  ).isRequired,
 };
+
+export default React.memo(FootprintChart);

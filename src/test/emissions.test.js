@@ -57,4 +57,18 @@ describe('emission calculations', () => {
       expect(val).toBeGreaterThan(0)
     })
   })
+
+  it('handles negative input values gracefully', () => {
+    expect(calculateTransport(-10, 'Car')).toBe(-2.1)
+  })
+
+  it('string/NaN inputs do not throw', () => {
+    expect(() => calculateTransport('abc', 'Car')).not.toThrow()
+    expect(Number.isNaN(calculateTransport('abc', 'Car'))).toBe(true)
+  })
+
+  it('maximum reasonable input values do not overflow', () => {
+    const maxVal = 9999999
+    expect(calculateTransport(maxVal, 'Flight')).toBe(2549999.75)
+  })
 })

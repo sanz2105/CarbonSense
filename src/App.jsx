@@ -14,19 +14,17 @@ function AppLayout() {
 
   return (
     <div className="min-h-screen bg-bg-mint flex flex-col font-sans">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-green-800 focus:rounded-lg focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
       <Navbar />
 
       <main id="main-content" role="main" key={location.pathname} className="flex-1 w-full animate-fadeIn">
         <Suspense fallback={
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '60vh',
-            color: '#1D9E75',
-            fontSize: '14px',
-            gap: '8px'
-          }}>
+          <div className="flex items-center justify-center h-[60vh] text-[#166E52] text-sm gap-2">
             <span>Loading...</span>
           </div>
         }>

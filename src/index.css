@@ -4,7 +4,7 @@
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   
-  --color-primary: #1D9E75;
+  --color-primary: #166E52;
   --color-secondary: #639922;
   --color-accent: #EF9F27;
   --color-bg-mint: #F8FAF9;
@@ -63,7 +63,7 @@
   width: auto;
   height: auto;
   padding: 8px 16px;
-  background: #1D9E75;
+  background: #166E52;
   color: white;
   font-size: 14px;
   z-index: 9999;
@@ -84,7 +84,7 @@
 }
 
 *:focus-visible {
-  outline: 2px solid #1D9E75;
+  outline: 2px solid #166E52;
   outline-offset: 2px;
   border-radius: 4px;
 }
