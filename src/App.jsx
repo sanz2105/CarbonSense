@@ -2,6 +2,7 @@ import { Routes, Route, BrowserRouter as Router, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { lazy, Suspense } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const LogActivity = lazy(() => import('./pages/LogActivity'));
@@ -13,7 +14,8 @@ function AppLayout() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-bg-mint flex flex-col font-sans">
+    <ErrorBoundary>
+      <div className="min-h-screen bg-bg-mint flex flex-col font-sans">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-green-800 focus:rounded-lg focus:shadow-lg"
@@ -39,7 +41,8 @@ function AppLayout() {
       </main>
 
       <Footer />
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
 

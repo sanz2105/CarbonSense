@@ -30,9 +30,11 @@ export default function Dashboard() {
     setIsBannerVisible(false);
   };
 
-  const todayDate = new Date().toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  });
+  const todayDate = useMemo(() => 
+    new Date().toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    }), 
+  []);
 
   const { todayEmissions, weeklyTotal, monthlyTotal, vsGlobal } = useMemo(() => calculateTotals(activities), [activities]);
   const recentToShow = useMemo(() => hasRealData ? activities.slice(0, UI.RECENT_ACTIVITIES_LIMIT) : mockActivities.slice(0, UI.RECENT_ACTIVITIES_LIMIT), [activities, hasRealData]);

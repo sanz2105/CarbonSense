@@ -74,4 +74,20 @@ describe('storage utilities', () => {
     localStorage.setItem('carbonsense_activities', 'not-valid-json')
     expect(getActivities()).toEqual([])
   })
+
+  it('handles QuotaExceededError gracefully', () => {
+    const originalSetItem = Storage.prototype.setItem
+    Storage.prototype.setItem = () => {
+      const err = new Error('QuotaExceededError')
+      err.name = 'QuotaExceededError'
+      throw err
+    }
+    const result = saveActivity({ 
+      id: '999', 
+      description: 'test', 
+      emissions: 1 
+    })
+    Storage.prototype.setItem = originalSetItem
+    expect(result).toBe(false)
+  })
 })

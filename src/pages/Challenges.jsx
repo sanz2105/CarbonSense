@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Trophy, Flame, RotateCcw, ShieldCheck, TreePine } from 'lucide-react';
 import { saveChallengeProgress, getChallengeProgress, saveStreak, getStreak } from '../utils/storage';
 import ChallengeCard from '../components/ChallengeCard';
 import { INITIAL_CHALLENGES, UI, EMISSIONS } from '../constants';
+import { KG_CO2_PER_TREE_PER_YEAR } from '../utils/constants';
+
 
 export default function Challenges() {
   useEffect(() => {
@@ -62,11 +64,15 @@ export default function Challenges() {
     }
   }, []);
 
-  const totalSaved = challenges
-    .filter((ch) => ch.completed)
-    .reduce((sum, ch) => sum + ch.saving, 0);
-
-  const treeEquivalence = (totalSaved / EMISSIONS.TREE_CO2_ABSORPTION_KG).toFixed(2);
+  const { totalSaved, treeEquivalence } = useMemo(() => {
+    const saved = challenges
+      .filter(c => c.completed)
+      .reduce((sum, c) => sum + (c.saving || 0), 0)
+    return {
+      totalSaved: parseFloat(saved.toFixed(1)),
+      treeEquivalence: Math.floor(saved / KG_CO2_PER_TREE_PER_YEAR)
+    }
+  }, [challenges])
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn space-y-8">

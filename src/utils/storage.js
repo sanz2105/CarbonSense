@@ -3,6 +3,8 @@
 // Robust error handling + storage quota management
 // ─────────────────────────────────────────────────────────
 
+import { MAX_ACTIVITIES_STORED } from './constants';
+
 const KEYS = {
   activities: 'carbonsense_activities',
   challenges: 'carbonsense_challenges',
@@ -46,8 +48,8 @@ const safeSet = (key, value) => {
  */
 export const saveActivity = (activity) => {
   const existing = getActivities();
-  const updated = [activity, ...existing].slice(0, 100);
-  safeSet(KEYS.activities, updated);
+  const updated = [activity, ...existing].slice(0, MAX_ACTIVITIES_STORED);
+  return safeSet(KEYS.activities, updated);
 };
 
 /**

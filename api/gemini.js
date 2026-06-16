@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS, MAX_INPUT_CHARS } from '../src/utils/constants.js'
 
 // ── Load .env manually in local dev (Vite middleware doesn't inject env) ───────
 function loadEnvIfNeeded() {
@@ -22,13 +23,12 @@ function loadEnvIfNeeded() {
 }
 
 const rateLimit = new Map()
-const RATE_LIMIT_WINDOW = 60 * 1000
-const RATE_LIMIT_MAX = 5
+
 
 function isRateLimited(ip) {
   const now = Date.now()
   const entry = rateLimit.get(ip) || { count: 0, start: now }
-  if (now - entry.start > RATE_LIMIT_WINDOW) {
+  if (now - entry.start > RATE_LIMIT_WINDOW_MS) {
     rateLimit.set(ip, { count: 1, start: now })
     return false
   }
@@ -81,7 +81,7 @@ export default async function handler(req, res) {
     const sanitized = userInput
       .replace(/<[^>]*>/g, '')
       .trim()
-      .slice(0, 500)
+      .slice(0, MAX_INPUT_CHARS)
 
     loadEnvIfNeeded()
     
@@ -105,7 +105,8 @@ export default async function handler(req, res) {
 1. [Specific actionable tip]
 2. [Specific actionable tip]
 
-Keep total response under 150 words. Be encouraging.
+Be concise but complete. Never cut a sentence short.
+Complete all 3 sections fully. Be encouraging and friendly.
 User's day: ${sanitized}`
 
     const models = [
@@ -126,7 +127,7 @@ User's day: ${sanitized}`
             body: JSON.stringify({
               contents: [{ parts: [{ text: prompt }] }],
               generationConfig: {
-                maxOutputTokens: 1024,
+                maxOutputTokens: 2048,
                 temperature: 0.7
               }
             })

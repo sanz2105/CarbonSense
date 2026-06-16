@@ -7,44 +7,17 @@ export default function NotFound() {
   }, [])
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '60vh',
-      gap: '16px',
-      textAlign: 'center',
-      padding: '2rem'
-    }}>
-      <div style={{ fontSize: '56px' }}>🌿</div>
-      <h1 style={{ 
-        fontSize: '22px', 
-        fontWeight: 600,
-        color: '#111827',
-        margin: 0 
-      }}>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-8">
+      <div className="text-6xl">🌿</div>
+      <h1 className="text-xl font-semibold text-gray-900 m-0">
         Page Not Found
       </h1>
-      <p style={{ 
-        color: '#6B7280', 
-        margin: 0,
-        fontSize: '14px'
-      }}>
+      <p className="text-gray-500 text-sm m-0">
         This page doesn't exist or was moved.
       </p>
       <Link
         to="/"
-        style={{
-          marginTop: '8px',
-          padding: '8px 20px',
-          background: '#166E52',
-          color: 'white',
-          borderRadius: '8px',
-          textDecoration: 'none',
-          fontSize: '14px',
-          fontWeight: 500
-        }}
+        className="mt-2 px-5 py-2 bg-[#1D9E75] text-white rounded-lg text-sm font-medium no-underline hover:bg-[#0F6E56] transition-colors"
       >
         Back to Dashboard
       </Link>

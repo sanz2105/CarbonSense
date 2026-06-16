@@ -3,6 +3,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { weeklyEmissions as defaultData } from '../data/mockData';
 import PropTypes from 'prop-types';
 import { COLORS } from '../constants';
+import { GLOBAL_DAILY_AVG_KG } from '../utils/constants';
+
+
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -33,7 +36,7 @@ function FootprintChart({ data }) {
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 border-t-2 border-dashed" style={{ borderColor: COLORS.WARNING_ORANGE }}></span>
-            Global Daily Avg (5.5)
+            Global Daily Avg ({GLOBAL_DAILY_AVG_KG})
           </span>
         </div>
       </div>
@@ -65,7 +68,7 @@ function FootprintChart({ data }) {
               />
               <Legend verticalAlign="bottom" height={1} content={() => null} />
               <ReferenceLine 
-                y={5.5} 
+                y={GLOBAL_DAILY_AVG_KG} 
                 stroke={COLORS.WARNING_ORANGE} 
                 strokeDasharray="4 4" 
                 strokeWidth={1.5}

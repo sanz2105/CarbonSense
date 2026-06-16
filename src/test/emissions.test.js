@@ -71,4 +71,15 @@ describe('emission calculations', () => {
     const maxVal = 9999999
     expect(calculateTransport(maxVal, 'Flight')).toBe(2549999.75)
   })
+
+  it('returns 0 for bike regardless of distance', () => {
+    expect(calculateTransport(0, 'Bike')).toBe(0)
+    expect(calculateTransport(100, 'Bike')).toBe(0)
+    expect(calculateTransport(999, 'Bike')).toBe(0)
+  })
+
+  it('handles zero distance correctly', () => {
+    expect(calculateTransport(0, 'Car')).toBe(0)
+    expect(calculateTransport(0, 'Flight')).toBe(0)
+  })
 })
