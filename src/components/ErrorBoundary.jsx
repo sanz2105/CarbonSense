@@ -1,5 +1,14 @@
+/**
+ * @fileoverview React Error Boundary component.
+ * Catches unexpected render errors and shows recovery UI.
+ */
+
 import { Component } from 'react'
 
+/**
+ * ErrorBoundary wraps children and catches render errors.
+ * @extends {React.Component}
+ */
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props)

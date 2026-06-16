@@ -1,5 +1,12 @@
 # 🌿 CarbonSense — Carbon Footprint Tracker
 
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
+![React](https://img.shields.io/badge/React-19-blue)
+![Vercel](https://img.shields.io/badge/deployed-Vercel-black)
+![Tests](https://img.shields.io/badge/tests-59%20passing-brightgreen)
+![Gemini](https://img.shields.io/badge/AI-Gemini%203.5%20Flash-orange)
+
 **CarbonSense** is a modern, high-fidelity Carbon Footprint Awareness and Tracking Platform designed to help individuals monitor, analyze, and systematically reduce their daily greenhouse gas emissions.
 
 ---
@@ -15,6 +22,41 @@
 2.  **Log Activity**: A dynamic calculator form where users can log daily habits (Transport, Food, Energy, Shopping, and Other). Emissions are calculated in real-time as users type, using standard emission coefficients.
 3.  **AI Insights**: A direct chat gateway ("🤖 AI Carbon Coach") that queries Google Gemini API (gemini-3.5-flash) to analyze a user's day, estimate daily carbon impact, identify emission culprits, and recommend actionable reduction tips.
 4.  **Eco Challenges**: A gamified track where users participate in 6 custom carbon-saving challenges (Easy, Medium, Hard). Completing challenges triggers streak increments, updates progress bars, and computes overall carbon-reduction stats and tree equivalencies.
+
+## Project Structure
+```
+carbonsense/
+├── api/
+│   └── gemini.js          # Vercel serverless function (CORS-safe)
+├── src/
+│   ├── components/
+│   │   ├── ErrorBoundary.jsx  # Error recovery wrapper
+│   │   ├── Footer.jsx
+│   │   ├── FootprintChart.jsx # Recharts bar chart
+│   │   ├── InsightsPanel.jsx  # AI Carbon Coach UI
+│   │   ├── Navbar.jsx
+│   │   └── StatCard.jsx       # Reusable metric card
+│   ├── pages/
+│   │   ├── Challenges.jsx     # Gamified eco challenges
+│   │   ├── Dashboard.jsx      # Main overview page
+│   │   ├── Insights.jsx       # Full AI insights page
+│   │   ├── LogActivity.jsx    # Activity logging form
+│   │   └── NotFound.jsx       # 404 page
+│   ├── utils/
+│   │   ├── constants.js       # Centralized constants
+│   │   ├── markdown.jsx       # Markdown → JSX renderer
+│   │   └── storage.js         # localStorage helpers
+│   ├── data/
+│   │   └── mockData.js        # Sample data + emission factors
+│   └── test/
+│       ├── emissions.test.js
+│       ├── StatCard.test.jsx
+│       └── storage.test.js
+├── .env.example
+├── .npmrc
+├── vercel.json
+└── vite.config.js
+```
 
 ---
 

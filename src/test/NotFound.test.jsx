@@ -1,19 +1,39 @@
-import '@testing-library/jest-dom';
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import NotFound from '../pages/NotFound';
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import NotFound from '../pages/NotFound'
 
-describe('NotFound', () => {
-  it('renders without crashing and contains a link back to home', () => {
-    const { container } = render(
-      <BrowserRouter>
+describe('NotFound page', () => {
+  it('renders 404 message', () => {
+    render(
+      <MemoryRouter>
         <NotFound />
-      </BrowserRouter>
-    );
-    
-    expect(container).not.toBeEmptyDOMElement();
-    const homeLink = screen.getByRole('link');
-    expect(homeLink).toHaveAttribute('href', '/');
-  });
-});
+      </MemoryRouter>
+    )
+    expect(
+      screen.getByText('Page Not Found')
+    ).toBeInTheDocument()
+  })
+
+  it('renders back to dashboard link', () => {
+    render(
+      <MemoryRouter>
+        <NotFound />
+      </MemoryRouter>
+    )
+    expect(
+      screen.getByText('Back to Dashboard')
+    ).toBeInTheDocument()
+  })
+
+  it('sets document title on mount', () => {
+    render(
+      <MemoryRouter>
+        <NotFound />
+      </MemoryRouter>
+    )
+    expect(document.title).toBe(
+      'Page Not Found — CarbonSense'
+    )
+  })
+})

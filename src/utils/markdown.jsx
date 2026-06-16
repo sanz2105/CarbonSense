@@ -1,7 +1,14 @@
-// Lightweight markdown → JSX renderer
-// Handles: emoji headers, **bold**, *italic*, 
-// numbered lists, bullet lists, plain paragraphs
+/**
+ * @fileoverview Lightweight Markdown to JSX renderer.
+ * Handles emoji headers, bold, italic, lists, paragraphs.
+ * @module markdown
+ */
 
+/**
+ * Formats inline markdown: bold, italic, code spans.
+ * @param {string} text - Raw markdown text
+ * @returns {Array} Array of React elements
+ */
 function inlineFormat(text) {
   const parts = text.split(
     /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g
@@ -28,6 +35,11 @@ function inlineFormat(text) {
   })
 }
 
+/**
+ * Converts a markdown string to an array of React elements.
+ * @param {string} text - Raw markdown response from Gemini
+ * @returns {Array} Array of React elements ready to render
+ */
 export function renderMarkdown(text) {
   const lines = text.split('\n')
   const elements = []

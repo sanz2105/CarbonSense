@@ -43,8 +43,13 @@ const safeSet = (key, value) => {
 // ── Activities ──────────────────────────────────────────
 
 /**
- * Saves a single new activity. Keeps max 100 entries to prevent quota issues.
- * @param {{ id, category, description, emissions, date, details }} activity
+ * Saves a new activity to localStorage.
+ * Prepends to existing list, capped at MAX_ACTIVITIES_STORED.
+ * @param {Object} activity - The activity object to save
+ * @param {string} activity.id - Unique identifier
+ * @param {string} activity.category - Emission category
+ * @param {number} activity.emissions - CO₂ in kg
+ * @returns {boolean} True if saved successfully
  */
 export const saveActivity = (activity) => {
   const existing = getActivities();
@@ -53,37 +58,39 @@ export const saveActivity = (activity) => {
 };
 
 /**
- * Returns all logged activities (newest first).
- * @returns {Array}
+ * Retrieves all stored activities from localStorage.
+ * @returns {Array} Array of activity objects, newest first
  */
 export const getActivities = () => safeGet(KEYS.activities, []);
 
 // ── Challenges ──────────────────────────────────────────
 
 /**
- * Persists the full challenges array.
- * @param {Array} challenges
+ * Saves challenge progress state to localStorage.
+ * @param {Array} challenges - Array of challenge objects
+ * @returns {boolean} True if saved successfully
  */
 export const saveChallengeProgress = (challenges) =>
   safeSet(KEYS.challenges, challenges);
 
 /**
- * Returns the saved challenges array, or empty array if never saved.
- * @returns {Array}
+ * Retrieves saved challenge progress from localStorage.
+ * @returns {Array} Array of challenge objects
  */
 export const getChallengeProgress = () => safeGet(KEYS.challenges, []);
 
 // ── Streak ───────────────────────────────────────────────
 
 /**
- * Saves the streak number.
- * @param {number} streak
+ * Saves the current streak count to localStorage.
+ * @param {number} streak - Number of consecutive days
+ * @returns {boolean} True if saved successfully
  */
 export const saveStreak = (streak) => safeSet(KEYS.streak, streak);
 
 /**
- * Returns the saved streak, or 0 as default.
- * @returns {number}
+ * Retrieves the current streak count from localStorage.
+ * @returns {number} Current streak, defaults to 0
  */
 export const getStreak = () => safeGet(KEYS.streak, 0);
 
@@ -91,6 +98,7 @@ export const getStreak = () => safeGet(KEYS.streak, 0);
 
 /**
  * Clears all CarbonSense data from localStorage.
+ * @returns {void}
  */
 export const clearAllData = () => {
   Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
